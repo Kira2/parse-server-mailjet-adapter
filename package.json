@@ -21,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/Kira2/parse-server-mailjet-adapter/issues"
   },
-  "homepage": "https://github.com/Kira2/parse-server-mailjet-adapter#readme"
+  "homepage": "https://github.com/Kira2/parse-server-mailjet-adapter#readme",
+  "dependencies": {
+    "node-mailjet": "^3.0.5"
+  }
 }
