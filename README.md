@@ -10,6 +10,8 @@ npm install parse-server-mailjet-adapter --save
 ```javascript
 var api = new ParseServer({
   ...
+  // Your apps name. This will appear in the subject and body of the emails that are sent.
+  appName: "Ekyno",
   // The options for the email adapter
   emailAdapter: {
     module: "parse-server-mailjet-adapter",
@@ -21,24 +23,23 @@ var api = new ParseServer({
       // The email to send Mailjet templates bug reports to.
       // Need it only if use the option templateId.
       apiErrorEmail: "bugreport@yourdomain.com",
-      // The address that your emails come from
-      fromAddress: "noreply@yourdomain.com",
+      // The email address that your emails come from
+      fromEmail: "noreply@yourdomain.com",
       // The name do display as the sender (optional)
       fromName: "Your Application",
-      // The subject (optional)
-      subject: "Reset My Password",
+      // The subject of the email to reset the password (optional)
+      passwordResetSubject: "Rest My Password",
       // Set it to use a template of your Mailjet account (optional).
       // This is the id of the template to use.
-      templateId: 12345,
-      // The pattern that defines the beginning of your server url to extract the reset link.
-      // Need it only if use the option templateId.
-      linkPattern: "http://localhost:1337/parse"
+      passwordResetTemplateId: 12345
     }
   }
   ...
 });
 ```
 
-As you see, you can directly use the text email sent by default by parse-server. To do this, just not provide **templateId**. In this case, **apiErrorEmail** and **linkPattern** are not used and can be ommitted too.
+As you see, you can directly use the default email text written by parse-server. To do this, just not provide **templateId**. In this case, **apiErrorEmail** is not used and can be ommitted too.
 
-If you want to use a template, just add the **templateId** option with the ID of the template into your Mailjet account, and do not forget to use the variable **link_param** into it: **{{var:link_param}}**. This variable is set with the value of the link to click to reset the password.
+#### Use template for the request password email
+
+If you want to use a template, just add the **passwordResetTemplateId** option with the ID of the template into your Mailjet account, and do not forget to use the variables **appName** and **link** into it: **{{var:appName}}** and **{{var:link}}**. These variables are set with the value of your application name and the link to reset the password.
