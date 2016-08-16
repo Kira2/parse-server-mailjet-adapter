@@ -38,8 +38,8 @@ var api = new ParseServer({
 });
 ```
 
-As you see, you can directly use the default email text written by parse-server. To do this, just not provide **templateId**. In this case, **apiErrorEmail** is not used and can be ommitted too.
+As you see, you can directly use the default email text written by parse-server. To do this, just not provide **passwordResetTemplateId**. In this case, **apiErrorEmail** is not used and can be ommitted too.
 
-#### Use template for the request password email
+#### Use a template for the request password email
 
 If you want to use a template, just add the **passwordResetTemplateId** option with the ID of the template into your Mailjet account, and do not forget to use the variables **appName** and **link** into it: **{{var:appName}}** and **{{var:link}}**. These variables are set with the value of your application name and the link to reset the password.
