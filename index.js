@@ -12,9 +12,27 @@ var mailjetAdapter = options => {
     var data = {
       "FromEmail": options.fromAddress,
       "FromName": options.fromName,
-      "Subject": mail.subject,
-      "Recipients": [{"Email": mail.to}],
-      "Text-part": mail.text
+      "Recipients": [{"Email": mail.to}]
+    }
+
+    // set the subject
+    var subject = options.subject;
+    data["Subject"] = (subject ? subject : mail.subject);
+
+    // use the template if any, and extract the link to set it
+    if (options.templateId) {
+      var idx = mail.text.indexOf(options.linkPattern);
+      var link = mail.text.substring(idx);
+
+      var variables = { "link_param": link };
+
+      data["MJ-TemplateLanguage"] = "true";
+      data["MJ-TemplateErrorReporting"] = options.apiErrorEmail;
+      data["Mj-TemplateID"] = options.templateId;
+      data["Vars"] = variables;
+    }
+    else {
+      data["Text-part"] = mail.text;
     }
 
     return new Promise((resolve, reject) => {
