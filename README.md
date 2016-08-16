@@ -7,31 +7,31 @@ npm install parse-server-mailjet-adapter --save
 ```
 
 ### Configuration
-```
+```javascript
 var api = new ParseServer({
   ...
-  // The email adapter
+  // The options for the email adapter
   emailAdapter: {
     module: "parse-server-mailjet-adapter",
     options: {
-      // The API key from Mailjet
+      // The API key from your Mailjet account
       apiKey: "YOUR_MAILJET_API_KEY",
-      // The API secret from Mailjet
+      // The API secret from your Mailjet account
       apiSecret: "YOUR_MAILJET_API_SECRET",
-      // The email to send Mailjet templates bug reports (optional)
-      // Need it only if use a template
+      // The email to send Mailjet templates bug reports to.
+      // Need it only if use the option templateId.
       apiErrorEmail: "bugreport@yourdomain.com",
       // The address that your emails come from
       fromAddress: "noreply@yourdomain.com",
-      // The name do display as sender (optional)
+      // The name do display as the sender (optional)
       fromName: "Your Application",
       // The subject (optional)
       subject: "Reset My Password",
-      // Set it to use a template (optional)
-      // This is the id of the template to use
+      // Set it to use a template of your Mailjet account (optional).
+      // This is the id of the template to use.
       templateId: 12345,
-      // The pattern that defines the beginning of your server url to extract the reset link (optional)
-      // Need it only if use a template
+      // The pattern that defines the beginning of your server url to extract the reset link.
+      // Need it only if use the option templateId.
       linkPattern: "http://localhost:1337/parse"
     }
   }
