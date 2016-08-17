@@ -25,11 +25,11 @@ var api = new ParseServer({
       // The email address that your emails come from
       fromEmail: "noreply@yourdomain.com",
       // The name do display as the sender (optional)
-      fromName: "Your Application",
+      fromName: "The sender name",
       //
       // Parameters for the reset password emails
       //
-      // The subject of the email to reset the password (optional)
+      // The subject of the email to reset the password
       passwordResetSubject: "Rest My Password",
       // Set it to use a template with your Mailjet account.
       // This is the id of the template to use.
@@ -41,7 +41,7 @@ var api = new ParseServer({
       //
       // Parameters for the email verification emails
       //
-      // The subject of the email to reset the password (optional)
+      // The subject of the email to reset the password
       verificationEmailSubject: "Verify your email",
       // Set it to use a template with your Mailjet account.
       // This is the id of the template to use.
