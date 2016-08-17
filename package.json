@@ -1,6 +1,6 @@
 {
   "name": "parse-server-mailjet-adapter",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Used to send Parse Server password reset emails through Mailjet",
   "main": "index.js",
   "scripts": {
