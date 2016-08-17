@@ -2,40 +2,39 @@ var Mailjet = require("node-mailjet");
 
 var mailjetAdapter = options => {
   if (!options || !options.apiKey || !options.apiSecret || !options.fromEmail) {
-    throw "mailjetAdapter requires an API key, an API secret and a from address.";
+    throw "mailjetAdapter requires an API key, an API secret and a from email address.";
   }
   var mailjet = Mailjet.connect(options.apiKey, options.apiSecret);
 
   /**
-   * @function sendPasswordResetEmail
-   * @description Sends the link to reset the password
+   * @function _sendLink
+   * @description Sends the reset password or verify email links
    */
-  var sendPasswordResetEmail = mail => {
+  var _sendLink = (mail, subject, templateId, textPart, htmlPart) => {
     var send = mailjet.post("send");
+    var email = mail.user.get("email");
 
     var data = {
       "FromEmail": options.fromEmail,
       "FromName": options.fromName,
-      "Recipients": [{"Email": mail.user.get("email")}]
+      "Recipients": [{"Email": email}]
     }
 
-    // set the subject
-    var subject = options.passwordResetSubject;
-    data["Subject"] = (subject ? subject : mail.subject);
+    // set the subject and the variable to replace into the body of the email
+    data["MJ-TemplateErrorReporting"] = options.apiErrorEmail;
+    data["MJ-TemplateLanguage"] = "true";
+    data["Vars"] = {
+      "email": email,
+      "appName": mail.appName,
+      "link": mail.link
+    };
+    data["Subject"] = subject;
 
-    // use the template if any, and extract the link to set it
-    if (options.passwordResetTemplateId) {
-      data["MJ-TemplateLanguage"] = "true";
-      data["MJ-TemplateErrorReporting"] = options.apiErrorEmail;
-      data["Mj-TemplateID"] = options.passwordResetTemplateId;
-      data["Vars"] = {
-        "appName": mail.appName,
-        "link": mail.link
-      };
-    }
-    else {
-      data["Text-part"] = mail.text;
-    }
+    // set the body part with by specifying the templateId, or by settings the
+    //  plain text part and the html part
+    data["Mj-TemplateID"] = templateId;
+    data["Text-part"] = textPart;
+    data["Html-part"] = htmlPart;
 
     return new Promise((resolve, reject) => {
       send.request(data).then(resolve).catch(reject);
@@ -44,14 +43,33 @@ var mailjetAdapter = options => {
 
 
   /**
+   * @function sendPasswordResetEmail
+   * @description Sends the link to reset the password
+   */
+  var sendPasswordResetEmail = mail => {
+    return _sendLink(
+      mail,
+      options.passwordResetSubject,
+      options.passwordResetTemplateId,
+      options.passwordResetTextPart,
+      options.passwordResetHtmlPart
+    );
+  }
+
+
+  /**
    * @function sendVerificationEmail
    * @description Sends the link to verify an email
    */
-  // var sendVerificationEmail = mail => {
-  //   return new Promise((resolve, reject) => {
-  //     resolve();
-  //   });
-  // }
+  var sendVerificationEmail = mail => {
+    return _sendLink(
+      mail,
+      options.verificationEmailSubject,
+      options.verificationEmailTemplateId,
+      options.verificationEmailTextPart,
+      options.verificationEmailHtmlPart
+    );
+  }
 
 
   /**
@@ -75,7 +93,7 @@ var mailjetAdapter = options => {
   }
 
   return Object.freeze({
-    // sendVerificationEmail: sendVerificationEmail,
+    sendVerificationEmail: sendVerificationEmail,
     sendPasswordResetEmail: sendPasswordResetEmail,
     sendMail: sendMail
   });
