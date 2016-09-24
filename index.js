@@ -12,7 +12,9 @@ var mailjetAdapter = options => {
    */
   var _sendLink = (mail, subject, templateId, textPart, htmlPart) => {
     var send = mailjet.post("send");
-    var email = mail.user.get("email");
+    
+    // lookup for email in username field if email is undefined
+    var email = mail.user.get("email") || mail.user.get("username");
 
     var data = {
       "FromEmail": options.fromEmail,
