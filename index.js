@@ -10,20 +10,20 @@ var mailjetAdapter = options => {
    * @function _sendLink
    * @description Sends the reset password or verify email links
    */
-  var _sendLink = (mail, subject, templateId, textPart, htmlPart) => {
+  var _sendLink = (mail, opts, subject, templateId, textPart, htmlPart) => {
     var send = mailjet.post("send");
     
     // lookup for email in username field if email is undefined
     var email = mail.user.get("email") || mail.user.get("username");
 
     var data = {
-      "FromEmail": options.fromEmail,
-      "FromName": options.fromName,
+      "FromEmail": opts.fromEmail,
+      "FromName": opts.fromName,
       "Recipients": [{"Email": email}]
     }
 
     // set the subject and the variable to replace into the body of the email
-    data["MJ-TemplateErrorReporting"] = options.apiErrorEmail;
+    data["MJ-TemplateErrorReporting"] = opts.apiErrorEmail;
     data["MJ-TemplateLanguage"] = "true";
     data["Vars"] = {
       "email": email,
@@ -43,19 +43,30 @@ var mailjetAdapter = options => {
     });
   }
 
+  /**
+   * @function _getOptions
+   * @description Get the options for this specific mailing task
+   */
+  var _getOptions = mail => {
+    return options.getIndividualOptions ?
+      options.getIndividualOptions(mail) : Promise.all(options)
+  };
 
   /**
    * @function sendPasswordResetEmail
    * @description Sends the link to reset the password
    */
   var sendPasswordResetEmail = mail => {
-    return _sendLink(
-      mail,
-      options.passwordResetSubject,
-      options.passwordResetTemplateId,
-      options.passwordResetTextPart,
-      options.passwordResetHtmlPart
-    );
+    return _getOptions(mail).then(opts => {
+      return _sendLink(
+        mail,
+        opts,
+        opts.passwordResetSubject,
+        opts.passwordResetTemplateId,
+        opts.passwordResetTextPart,
+        opts.passwordResetHtmlPart
+      );
+    });
   }
 
 
@@ -64,13 +75,16 @@ var mailjetAdapter = options => {
    * @description Sends the link to verify an email
    */
   var sendVerificationEmail = mail => {
-    return _sendLink(
-      mail,
-      options.verificationEmailSubject,
-      options.verificationEmailTemplateId,
-      options.verificationEmailTextPart,
-      options.verificationEmailHtmlPart
-    );
+    return _getOptions(mail).then(opts => {
+      return _sendLink(
+        mail,
+        opts,
+        opts.verificationEmailSubject,
+        opts.verificationEmailTemplateId,
+        opts.verificationEmailTextPart,
+        opts.verificationEmailHtmlPart
+      );
+    });
   }
 
 
