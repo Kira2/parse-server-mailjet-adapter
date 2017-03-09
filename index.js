@@ -49,9 +49,15 @@ var mailjetAdapter = options => {
    */
   var _getOptions = mail => {
     if (options.getIndividualOptions) {
-      return options.getIndividualOptions(mail).then(opts => {
-        return Object.assign({}, options, opts);
-      })
+      var iOpts = options.getIndividualOptions(mail);
+      
+      if (iOpts.then) {
+        return iOpts.then(opts => {
+          return Object.assign({}, options, opts);
+        });
+      } else {
+        return Object.assign({}, options, iOpts);
+      }
     } else {
       return Promise.all(options);
     }

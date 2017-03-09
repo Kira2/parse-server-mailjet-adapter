@@ -54,6 +54,7 @@ var api = new ParseServer({
       // Optional: A callback function that returns the options used for sending
       // verification and password reset emails. The returned options are merged
       // with this options object.
+      // If needed, this function can also return a promise for an options object.
       getIndividualOptions: function(targetOpts) {
         if (targetOpts.user.get("email") === "queen@buckingham.palace") {
           return {
