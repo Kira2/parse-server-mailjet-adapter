@@ -56,7 +56,8 @@ var api = new ParseServer({
       // with this options object.
       // If needed, this function can also return a promise for an options object.
       getIndividualOptions: function(targetOpts) {
-        if (targetOpts.user.get("email") === "queen@buckingham.palace") {
+        var toMail = targetOpts.to || (targetOpts.user && targetOpts.user.get("email"));
+        if (toMail === "queen@buckingham.palace") {
           return {
             passwordResetSubject: "Please reset your password your Highness"
           }

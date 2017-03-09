@@ -104,18 +104,20 @@ var mailjetAdapter = options => {
    * @description Sends a pre-defined email
    */
   var sendMail = mail => {
-    var send = mailjet.post("send");
+    return _getOptions(mail).then(opts => {
+      var send = mailjet.post("send");
 
-    var data = {
-      "FromEmail": options.fromEmail,
-      "FromName": options.fromName,
-      "Recipients": [{"Email": mail.to}],
-      "Subject": mail.subject,
-      "Text-part": mail.text
-    }
+      var data = {
+        "FromEmail": opts.fromEmail,
+        "FromName": opts.fromName,
+        "Recipients": [{"Email": mail.to}],
+        "Subject": mail.subject,
+        "Text-part": mail.text
+      }
 
-    return new Promise((resolve, reject) => {
-      send.request(data).then(resolve).catch(reject);
+      return new Promise((resolve, reject) => {
+        send.request(data).then(resolve).catch(reject);
+      });
     });
   }
 
