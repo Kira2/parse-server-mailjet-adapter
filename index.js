@@ -49,17 +49,11 @@ var mailjetAdapter = options => {
    */
   var _getOptions = mail => {
     if (options.getIndividualOptions) {
-      var iOpts = options.getIndividualOptions(mail);
-      
-      if (iOpts.then) {
-        return iOpts.then(opts => {
-          return Object.assign({}, options, opts);
-        });
-      } else {
-        return Object.assign({}, options, iOpts);
-      }
+      return Promise.resolve(options.getIndividualOptions(mail)).then(opts => {
+        return Object.assign({}, options, opts);
+      });
     } else {
-      return Promise.all(options);
+      return Promise.resolve(options);
     }
   };
 
