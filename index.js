@@ -48,8 +48,13 @@ var mailjetAdapter = options => {
    * @description Get the options for this specific mailing task
    */
   var _getOptions = mail => {
-    return options.getIndividualOptions ?
-      options.getIndividualOptions(mail) : Promise.all(options)
+    if (options.getIndividualOptions) {
+      return options.getIndividualOptions(mail).then(opts => {
+        return Object.assign({}, options, opts);
+      })
+    } else {
+      return Promise.all(options);
+    }
   };
 
   /**
