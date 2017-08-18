@@ -12,7 +12,7 @@ var mailjetAdapter = options => {
    */
   var _sendLink = (mail, opts, subject, templateId, textPart, htmlPart) => {
     var send = mailjet.post("send");
-    
+
     // lookup for email in username field if email is undefined
     var email = mail.user.get("email") || mail.user.get("username");
 
@@ -20,7 +20,7 @@ var mailjetAdapter = options => {
       "FromEmail": opts.fromEmail,
       "FromName": opts.fromName,
       "Recipients": [{"Email": email}]
-    }
+    };
 
     // set the subject and the variable to replace into the body of the email
     data["MJ-TemplateErrorReporting"] = opts.apiErrorEmail;
@@ -41,7 +41,7 @@ var mailjetAdapter = options => {
     return new Promise((resolve, reject) => {
       send.request(data).then(resolve).catch(reject);
     });
-  }
+  };
 
   /**
    * @function _getOptions
@@ -72,7 +72,7 @@ var mailjetAdapter = options => {
         opts.passwordResetHtmlPart
       );
     });
-  }
+  };
 
 
   /**
@@ -90,7 +90,7 @@ var mailjetAdapter = options => {
         opts.verificationEmailHtmlPart
       );
     });
-  }
+  };
 
 
   /**
@@ -107,19 +107,19 @@ var mailjetAdapter = options => {
         "Recipients": [{"Email": mail.to}],
         "Subject": mail.subject,
         "Text-part": mail.text
-      }
+      };
 
       return new Promise((resolve, reject) => {
         send.request(data).then(resolve).catch(reject);
       });
     });
-  }
+  };
 
   return Object.freeze({
     sendVerificationEmail: sendVerificationEmail,
     sendPasswordResetEmail: sendPasswordResetEmail,
     sendMail: sendMail
   });
-}
+};
 
-module.exports = mailjetAdapter
+module.exports = mailjetAdapter;
