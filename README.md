@@ -30,7 +30,7 @@ var api = new ParseServer({
       // Parameters for the reset password emails
       //
       // The subject of the email to reset the password
-      passwordResetSubject: "Rest My Password",
+      passwordResetSubject: "Reset My Password",
       // Set it to use a template with your Mailjet account.
       // This is the id of the template to use.
       passwordResetTemplateId: 12345,
@@ -49,7 +49,21 @@ var api = new ParseServer({
       // If you do not use template, you can set the plain text part here
       verificationEmailTextPart: "Hi,\n\nYou are being asked to confirm the e-mail address {{var:email}} with {{var:appName}}\n\nClick here to confirm it: {{var:link}}",
       // If you do not use template, you can set the html part here
-      verificationEmailHtmlPart: "Hi,<p>You are being asked to confirm the e-mail address {{var:email}} with <b>{{var:appName}}</b></p><p>Click here to confirm it: {{var:link}}</p>"
+      verificationEmailHtmlPart: "Hi,<p>You are being asked to confirm the e-mail address {{var:email}} with <b>{{var:appName}}</b></p><p>Click here to confirm it: {{var:link}}</p>",
+      
+      // Optional: A callback function that returns the options used for sending
+      // verification and password reset emails. The returned options are merged
+      // with this options object.
+      // If needed, this function can also return a promise for an options object.
+      getIndividualOptions: function(targetOpts) {
+        var toMail = targetOpts.to || (targetOpts.user && targetOpts.user.get("email"));
+        if (toMail === "queen@buckingham.palace") {
+          return {
+            passwordResetSubject: "Please reset your password your Highness"
+          }
+        }
+        return {}
+      }
     }
   }
   ...
