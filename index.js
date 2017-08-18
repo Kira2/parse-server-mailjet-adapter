@@ -6,6 +6,23 @@ var mailjetAdapter = options => {
   }
   var mailjet = Mailjet.connect(options.apiKey, options.apiSecret);
 
+
+  /**
+   * @function _getOptions
+   * @description Get the [individual] options for the specific mailing task
+   */
+  var _getOptions = mail => {
+    if (options.getIndividualOptions) {
+      return Promise.resolve(options.getIndividualOptions(mail)).then(opts => {
+        return Object.assign({}, options, opts);
+      });
+    }
+    else {
+      return Promise.resolve(options);
+    }
+  };
+
+
   /**
    * @function _sendLink
    * @description Sends the reset password or verify email links
@@ -43,19 +60,6 @@ var mailjetAdapter = options => {
     });
   };
 
-  /**
-   * @function _getOptions
-   * @description Get the options for this specific mailing task
-   */
-  var _getOptions = mail => {
-    if (options.getIndividualOptions) {
-      return Promise.resolve(options.getIndividualOptions(mail)).then(opts => {
-        return Object.assign({}, options, opts);
-      });
-    } else {
-      return Promise.resolve(options);
-    }
-  };
 
   /**
    * @function sendPasswordResetEmail
