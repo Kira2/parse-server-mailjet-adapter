@@ -50,18 +50,23 @@ var api = new ParseServer({
       verificationEmailTextPart: "Hi,\n\nYou are being asked to confirm the e-mail address {{var:email}} with {{var:appName}}\n\nClick here to confirm it: {{var:link}}",
       // If you do not use template, you can set the html part here
       verificationEmailHtmlPart: "Hi,<p>You are being asked to confirm the e-mail address {{var:email}} with <b>{{var:appName}}</b></p><p>Click here to confirm it: {{var:link}}</p>",
-      
+
       // Optional: A callback function that returns the options used for sending
       // verification and password reset emails. The returned options are merged
       // with this options object.
       // If needed, this function can also return a promise for an options object.
+      // use the `customVars` to use more than the appName and link variables
+      // inside your mailjet template
       getIndividualOptions: function(targetOpts) {
         var toMail = targetOpts.to || (targetOpts.user && targetOpts.user.get("email"));
+        targetOpts.customVars = {
+            "fancyMailjetVar": "foo"
+        }
         if (toMail === "queen@buckingham.palace") {
           return {
             passwordResetSubject: "Please reset your password your Highness"
           }
-        }
+        }        
         return {}
       }
     }

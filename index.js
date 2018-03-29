@@ -47,6 +47,8 @@ var mailjetAdapter = options => {
       "appName": mail.appName,
       "link": mail.link
     };
+    // extends with custom vars (but make sure the above values are not overwritten)
+    data["Vars"] = Object.assign({}, mail.customVars, data["Vars"]);
     data["Subject"] = subject;
 
     // set the body part with by specifying the templateId, or by settings the
